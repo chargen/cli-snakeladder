@@ -12,6 +12,10 @@
 #include<string>
 #include "Player.h"
 
+#ifdef _WIN32
+#include "time.h"
+#endif
+
 class GameSession {
 public:
 	GameSession();

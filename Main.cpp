@@ -25,8 +25,6 @@ int main()
 {
 	GameSession game;
 
-	srand(time(NULL));
-
 	std::string response = "y";
 	int seqNo = 1;
 	do {
