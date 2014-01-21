@@ -14,7 +14,10 @@ GameSession::GameSession() : boardSize(100), numOfSnakes(5), numOfLadders(5), cu
 }
 
 GameSession::~GameSession() {
-	// TODO Auto-generated destructor stub
+	for (std::map<int, Player*>::iterator iter = playerMap.begin(); iter != playerMap.end(); iter++)
+	{
+		delete iter->second;
+	}
 }
 
 int GameSession::getBoardSize() {
