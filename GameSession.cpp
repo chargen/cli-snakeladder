@@ -116,12 +116,12 @@ std::pair<std::string, int> GameSession::play() {
 
 	if (gotSnakeTail(*p)) {
 		p->setCurrentPos(snakeMap[p->getCurrentPos()]);
-		std::cout << "Alas! Stepped on a snake\'s tail. Move back to square no. " << p->getCurrentPos() << std::endl;
+		std::cout << "Alas! SNAKE\'s tail. Move back to square no. " << p->getCurrentPos() << std::endl;
 	}
 
 	if (gotLadderBase(*p)) {
 		p->setCurrentPos(ladderMap[p->getCurrentPos()]);
-		std::cout << "Hooray! Ladder! Move up to square no. " << p->getCurrentPos() << std::endl;
+		std::cout << "Hooray! LADDER! Move up to square no. " << p->getCurrentPos() << std::endl;
 	}
 
 	turnResult = std::make_pair(p->getName(), 0);

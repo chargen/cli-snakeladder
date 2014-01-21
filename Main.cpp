@@ -37,9 +37,7 @@ int main()
 		}
 		game.createPlayer(pname);
 
-		std::cout << "Type \"Y/y\" and press ENTER to add another player, " << std::endl;
-		std::cout << "or any other key to proceed to game: " << std::endl;
-		std::cout << "Enter another player? " << std::endl;
+		std::cout << "Enter another player? [y/n]: " << std::endl;
 		std::cin >> response;
 		std::cout << std::endl;
 
