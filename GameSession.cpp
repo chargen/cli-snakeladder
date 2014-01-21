@@ -18,6 +18,7 @@ GameSession::~GameSession() {
 	{
 		delete iter->second;
 	}
+	playerMap.clear();
 }
 
 int GameSession::getBoardSize() {
