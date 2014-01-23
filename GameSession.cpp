@@ -39,7 +39,7 @@ void GameSession::createSnakes()
 	{
 		int tail = rand() % (boardSize - 2) + 2; // from 2 to boardSize-1
 		int head = rand() % (boardSize - 2) + 1; // from 1 to boardSize-2
-		while (head >= tail) {
+		while (head >= tail || ladderMap.count(head) > 0) {
 			head = rand() % (boardSize - 2) + 1; // if head >= tail, re-generate the value of head until it is smaller than tail
 		}
 		snakeMap[tail] = head;
@@ -55,7 +55,7 @@ void GameSession::createLadders()
 	{
 		int top = rand() % (boardSize - 2) + 2; // from 2 to boardSize-1
 		int base = rand() % (boardSize - 2) + 1; // from 1 to boardSize-2
-		while (base >= top) {
+		while (base >= top || snakeMap.count(base) > 0) {
 			base = rand() % (boardSize - 2) + 1; // if base >= top, re-generate the value of base until it is smaller than top
 		}
 		ladderMap[base] = top;
