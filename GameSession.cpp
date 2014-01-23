@@ -62,16 +62,6 @@ void GameSession::createLadders()
 	}
 }
 
-void GameSession::setNumOfSnakes(int snakes)
-{
-	numOfSnakes = snakes;
-}
-
-void GameSession::setNumOfLadder(int ladders)
-{
-	numOfLadders = ladders;
-}
-
 void GameSession::createPlayer(const std::string& name)
 {
 	playerVector.push_back(Player(name));
@@ -118,13 +108,23 @@ std::pair<std::string, int> GameSession::play(Player& p)
 		p.setCurrentPos(snakeMap[p.getCurrentPos()]);
 		std::cout << "Alas! SNAKE\'s tail. Move back to square no. " << p.getCurrentPos() << std::endl;
 	}
-
-	if (gotLadderBase(p)) {
+	else if (gotLadderBase(p)) {
 		p.setCurrentPos(ladderMap[p.getCurrentPos()]);
 		std::cout << "Hooray! LADDER! Move up to square no. " << p.getCurrentPos() << std::endl;
 	}
 
 	return std::make_pair(p.getName(), 0);
+}
+
+int GameSession::getUserInput() {
+	int snakes = 0;
+	while ((std::cin >> snakes).fail()) {
+		std::cin.clear();
+		std::string dump;
+		std::cin >> dump;
+		std::cout << "Invalid input. Please enter an integer: ";
+	}
+	return snakes;
 }
 
 void GameSession::start()
@@ -148,19 +148,17 @@ void GameSession::start()
 	while (response.compare("Y") == 0 || response.compare("y") == 0);
 
 	std::cout << "No. of Snakes in the board: ";
-	int snakes = 0;
-	std::cin >> snakes;
-	setNumOfSnakes(snakes);
+	numOfSnakes = getUserInput();
 
 	std::cout << "No. of Ladders in the board: ";
-	int ladders = 0;
-	std::cin >> ladders;
-	setNumOfLadder(ladders);
+	numOfLadders = getUserInput();
 
 	if (getNumOfPlayers() > 0)
 	{
 		createSnakes();
 		createLadders();
+		std::cout << std::endl << "GAME STARTS..." << std::endl;
+		sleep(1);
 	}
 	else
 	{

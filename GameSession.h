@@ -33,11 +33,11 @@ private:
 	bool gotLadderBase(const Player& p);
 	void createSnakes();
 	void createLadders();
-	void setNumOfSnakes(int snakes);
-	void setNumOfLadder(int ladder);
 	int getNumOfPlayers();
 	int throwDie();
 	std::pair<std::string, int> play(Player& p);
+	int getUserInput();
+
 	std::map<int, int> snakeMap; // key: snake tail, value: snake head
 	std::map<int, int> ladderMap; // key: ladder base, value: ladder top
 	std::vector<Player> playerVector;
