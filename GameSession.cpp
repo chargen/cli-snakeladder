@@ -158,7 +158,8 @@ void GameSession::start()
 		createSnakes();
 		createLadders();
 		std::cout << std::endl << "GAME STARTS..." << std::endl;
-		sleep(1);
+//		sleep(1); // only works in Linux
+		Sleep(1000);
 	}
 	else
 	{
