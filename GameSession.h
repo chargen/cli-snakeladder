@@ -21,6 +21,9 @@ public:
 	GameSession();
 	virtual ~GameSession();
 
+	void start();
+
+private:
 	int getBoardSize();
 	void createBoard(int numOfSquares, int numOfSnakes, int numOfLadders);
 	void createPlayer(const std::string& name);
@@ -34,9 +37,7 @@ public:
 	int getNumOfPlayers();
 	Player* nextPlayer();
 	int throwDie();
-	std::pair<std::string, int> play();
-
-private:
+	std::pair<std::string, int> play(Player& p);
 	std::map<int, int> snakeMap; // key: snake tail, value: snake head
 	std::map<int, int> ladderMap; // key: ladder base, value: ladder top
 	std::map<int, Player*> playerMap;

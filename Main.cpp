@@ -25,59 +25,7 @@ int main()
 {
 	GameSession game;
 
-	std::string response = "y";
-	int seqNo = 1;
-	do {
-		std::string pname;
-		std::cout << "Enter Player " << seqNo++ << "\'s name: ";
-		std::cin >> pname;
-		std::cout << std::endl;
-		if (pname.empty()) {
-			pname = "Player" + seqNo;
-		}
-		game.createPlayer(pname);
-
-		std::cout << "Enter another player? [y/n]: " << std::endl;
-		std::cin >> response;
-		std::cout << std::endl;
-
-	}
-	while (response.compare("Y") == 0 || response.compare("y") == 0);
-
-	std::cout << "No. of Snakes in the board: ";
-	int snakes = 0;
-	std::cin >> snakes;
-	game.setNumOfSnakes(snakes);
-
-	std::cout << "No. of Ladders in the board: ";
-	int ladders = 0;
-	std::cin >> ladders;
-	game.setNumOfLadder(ladders);
-
-	if (game.getNumOfPlayers() > 0) {
-		game.createSnakes();
-		game.createLadders();
-	}
-	else {
-		std::cout << "Seems nobody is playing. Number of players must be greater than 0" << std::endl;
-		return 0;
-	}
-
-	int turn = 0;
-	while(true) {
-		turn++;
-		if (turn % game.getNumOfPlayers() == 1) {
-			std::cout << std::endl;
-			std::cout << "Turn no. " << turn << std::endl;
-		}
-
-		std::pair<std::string, int> turnResult = game.play();
-		if (turnResult.second == 1)
-		{
-			std::cout << turnResult.first << " is THE WINNER!" << std::endl;
-			return 0;
-		}
-	}
+	game.start();
 
 	return 0;
 }

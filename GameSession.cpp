@@ -9,11 +9,13 @@
 #include<cstdlib>
 #include "GameSession.h"
 
-GameSession::GameSession() : boardSize(100), numOfSnakes(5), numOfLadders(5), currentPlayer(0) {
+GameSession::GameSession() : boardSize(100), numOfSnakes(5), numOfLadders(5), currentPlayer(0)
+{
 	srand(time(NULL));
 }
 
-GameSession::~GameSession() {
+GameSession::~GameSession()
+{
 	for (std::map<int, Player*>::iterator iter = playerMap.begin(); iter != playerMap.end(); iter++)
 	{
 		delete iter->second;
@@ -21,21 +23,25 @@ GameSession::~GameSession() {
 	playerMap.clear();
 }
 
-int GameSession::getBoardSize() {
+int GameSession::getBoardSize()
+{
 	return boardSize;
 }
 
-void GameSession::createBoard(int squares, int snakes, int ladders) {
+void GameSession::createBoard(int squares, int snakes, int ladders)
+{
 	boardSize = squares;
 	numOfSnakes = snakes;
 	numOfLadders = ladders;
 }
 
-void GameSession::createSnakes() {
+void GameSession::createSnakes()
+{
 	// Condition:
 	// 1. key: tail, value: head
 	// 2. tail > head
-	for (unsigned int i = 0; i < numOfSnakes; i++) {
+	for (unsigned int i = 0; i < numOfSnakes; i++)
+	{
 		int tail = rand() % (boardSize - 2) + 2; // from 2 to boardSize-1
 		int head = rand() % (boardSize - 2) + 1; // from 1 to boardSize-2
 		while (head >= tail) {
@@ -45,11 +51,13 @@ void GameSession::createSnakes() {
 	}
 }
 
-void GameSession::createLadders() {
+void GameSession::createLadders()
+{
 	// Condition:
 	// 1. key: base, value: top
 	// 2. top > base
-	for (unsigned int i =0; i < numOfLadders; i++) {
+	for (unsigned int i =0; i < numOfLadders; i++)
+	{
 		int top = rand() % (boardSize - 2) + 2; // from 2 to boardSize-1
 		int base = rand() % (boardSize - 2) + 1; // from 1 to boardSize-2
 		while (base >= top) {
@@ -59,36 +67,45 @@ void GameSession::createLadders() {
 	}
 }
 
-void GameSession::setNumOfSnakes(int snakes) {
+void GameSession::setNumOfSnakes(int snakes)
+{
 	numOfSnakes = snakes;
 }
 
-void GameSession::setNumOfLadder(int ladders) {
+void GameSession::setNumOfLadder(int ladders)
+{
 	numOfLadders = ladders;
 }
 
-void GameSession::createPlayer(const std::string& name) {
+void GameSession::createPlayer(const std::string& name)
+{
 	playerMap[playerMap.size()] = new Player(name);
 }
 
-bool GameSession::wonBy(const Player& p) {
+bool GameSession::wonBy(const Player& p)
+{
 	return p.getCurrentPos() >= boardSize;
 }
 
-bool GameSession::gotSnakeTail(const Player& p) {
+bool GameSession::gotSnakeTail(const Player& p)
+{
 	return snakeMap.count(p.getCurrentPos()) != 0;
 }
 
-bool GameSession::gotLadderBase(const Player& p) {
+bool GameSession::gotLadderBase(const Player& p)
+{
 	return ladderMap.count(p.getCurrentPos()) != 0;
 }
 
-int GameSession::getNumOfPlayers() {
+int GameSession::getNumOfPlayers()
+{
 	return playerMap.size();
 }
 
-Player* GameSession::nextPlayer() {
-	if (currentPlayer == playerMap.size() - 1) {
+Player* GameSession::nextPlayer()
+{
+	if (currentPlayer == playerMap.size() - 1)
+	{
 		currentPlayer = 0;
 		return playerMap[playerMap.size() - 1];
 	}
@@ -105,30 +122,93 @@ int GameSession::throwDie()
 	return die;
 }
 
-std::pair<std::string, int> GameSession::play() {
+std::pair<std::string, int> GameSession::play(Player& p)
+{
 	std::pair<std::string, int> turnResult;
 
-	Player* p = nextPlayer();
+//	Player* p = nextPlayer();
 	int steps = throwDie();
-	p->move(steps);
-	std::cout << p->getName() << " moves " << steps << " steps to square no. " << p->getCurrentPos() << std::endl;
+	p.move(steps);
+	std::cout << p.getName() << " moves " << steps << " steps to square no. " << p.getCurrentPos() << std::endl;
 
-	if (wonBy(*p)) {
-		turnResult = std::make_pair(p->getName(), 1);
+	if (wonBy(p)) {
+		turnResult = std::make_pair(p.getName(), 1);
 		return turnResult;
 	}
 
-	if (gotSnakeTail(*p)) {
-		p->setCurrentPos(snakeMap[p->getCurrentPos()]);
-		std::cout << "Alas! SNAKE\'s tail. Move back to square no. " << p->getCurrentPos() << std::endl;
+	if (gotSnakeTail(p)) {
+		p.setCurrentPos(snakeMap[p.getCurrentPos()]);
+		std::cout << "Alas! SNAKE\'s tail. Move back to square no. " << p.getCurrentPos() << std::endl;
 	}
 
-	if (gotLadderBase(*p)) {
-		p->setCurrentPos(ladderMap[p->getCurrentPos()]);
-		std::cout << "Hooray! LADDER! Move up to square no. " << p->getCurrentPos() << std::endl;
+	if (gotLadderBase(p)) {
+		p.setCurrentPos(ladderMap[p.getCurrentPos()]);
+		std::cout << "Hooray! LADDER! Move up to square no. " << p.getCurrentPos() << std::endl;
 	}
 
-	turnResult = std::make_pair(p->getName(), 0);
+	turnResult = std::make_pair(p.getName(), 0);
 
 	return turnResult;
+}
+
+void GameSession::start()
+{
+	std::string response = "y";
+	int seqNo = 1;
+	do
+	{
+		std::string pname;
+		std::cout << "Enter Player " << seqNo++ << "\'s name: ";
+		std::cin >> pname;
+		std::cout << std::endl;
+		if (pname.empty()) {
+			pname = "Player" + seqNo;
+		}
+		createPlayer(pname);
+
+		std::cout << "Enter another player? [y/n]: " << std::endl;
+		std::cin >> response;
+		std::cout << std::endl;
+
+	}
+	while (response.compare("Y") == 0 || response.compare("y") == 0);
+
+	std::cout << "No. of Snakes in the board: ";
+	int snakes = 0;
+	std::cin >> snakes;
+	setNumOfSnakes(snakes);
+
+	std::cout << "No. of Ladders in the board: ";
+	int ladders = 0;
+	std::cin >> ladders;
+	setNumOfLadder(ladders);
+
+	if (getNumOfPlayers() > 0)
+	{
+		createSnakes();
+		createLadders();
+	}
+	else
+	{
+		std::cout << "Seems nobody is playing. Number of players must be greater than 0" << std::endl;
+		return;
+	}
+
+	int turn = 0;
+	while(true)
+	{
+		turn++;
+		if (turn % getNumOfPlayers() == 1)
+		{
+			std::cout << std::endl;
+			std::cout << "Turn no. " << turn << std::endl;
+		}
+
+		std::pair<std::string, int> turnResult = play(*(nextPlayer()));
+		if (turnResult.second == 1)
+		{
+			std::cout << turnResult.first << " is THE WINNER!" << std::endl;
+			break;
+		}
+	}
 }
