@@ -16,11 +16,6 @@ GameSession::GameSession() : boardSize(100), numOfSnakes(5), numOfLadders(5), cu
 
 GameSession::~GameSession()
 {
-	for (std::map<int, Player*>::iterator iter = playerMap.begin(); iter != playerMap.end(); iter++)
-	{
-		delete iter->second;
-	}
-	playerMap.clear();
 }
 
 int GameSession::getBoardSize()
@@ -79,7 +74,7 @@ void GameSession::setNumOfLadder(int ladders)
 
 void GameSession::createPlayer(const std::string& name)
 {
-	playerMap[playerMap.size()] = new Player(name);
+	playerVector.push_back(Player(name));
 }
 
 bool GameSession::wonBy(const Player& p)
@@ -99,20 +94,7 @@ bool GameSession::gotLadderBase(const Player& p)
 
 int GameSession::getNumOfPlayers()
 {
-	return playerMap.size();
-}
-
-Player* GameSession::nextPlayer()
-{
-	if (currentPlayer == playerMap.size() - 1)
-	{
-		currentPlayer = 0;
-		return playerMap[playerMap.size() - 1];
-	}
-	else
-	{
-		return playerMap[currentPlayer++];
-	}
+	return playerVector.size();
 }
 
 int GameSession::throwDie()
@@ -124,16 +106,12 @@ int GameSession::throwDie()
 
 std::pair<std::string, int> GameSession::play(Player& p)
 {
-	std::pair<std::string, int> turnResult;
-
-//	Player* p = nextPlayer();
 	int steps = throwDie();
 	p.move(steps);
 	std::cout << p.getName() << " moves " << steps << " steps to square no. " << p.getCurrentPos() << std::endl;
 
 	if (wonBy(p)) {
-		turnResult = std::make_pair(p.getName(), 1);
-		return turnResult;
+		return std::make_pair(p.getName(), 1);
 	}
 
 	if (gotSnakeTail(p)) {
@@ -146,9 +124,7 @@ std::pair<std::string, int> GameSession::play(Player& p)
 		std::cout << "Hooray! LADDER! Move up to square no. " << p.getCurrentPos() << std::endl;
 	}
 
-	turnResult = std::make_pair(p.getName(), 0);
-
-	return turnResult;
+	return std::make_pair(p.getName(), 0);
 }
 
 void GameSession::start()
@@ -160,15 +136,13 @@ void GameSession::start()
 		std::string pname;
 		std::cout << "Enter Player " << seqNo++ << "\'s name: ";
 		std::cin >> pname;
-		std::cout << std::endl;
 		if (pname.empty()) {
 			pname = "Player" + seqNo;
 		}
 		createPlayer(pname);
 
-		std::cout << "Enter another player? [y/n]: " << std::endl;
+		std::cout << "Enter another player? [y/n]: ";
 		std::cin >> response;
-		std::cout << std::endl;
 
 	}
 	while (response.compare("Y") == 0 || response.compare("y") == 0);
@@ -197,18 +171,19 @@ void GameSession::start()
 	int turn = 0;
 	while(true)
 	{
-		turn++;
-		if (turn % getNumOfPlayers() == 1)
+		if (turn % getNumOfPlayers() == 0)
 		{
 			std::cout << std::endl;
-			std::cout << "Turn no. " << turn << std::endl;
+			std::cout << "Turn no. " << (turn / getNumOfPlayers()) + 1 << std::endl;
 		}
 
-		std::pair<std::string, int> turnResult = play(*(nextPlayer()));
+		std::pair<std::string, int> turnResult = play(playerVector[turn % getNumOfPlayers()]);
 		if (turnResult.second == 1)
 		{
 			std::cout << turnResult.first << " is THE WINNER!" << std::endl;
 			break;
 		}
+
+		turn++;
 	}
 }

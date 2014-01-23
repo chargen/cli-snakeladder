@@ -9,6 +9,7 @@
 #define GAMESESSION_H_
 
 #include<map>
+#include<vector>
 #include<string>
 #include "Player.h"
 
@@ -35,12 +36,11 @@ private:
 	void setNumOfSnakes(int snakes);
 	void setNumOfLadder(int ladder);
 	int getNumOfPlayers();
-	Player* nextPlayer();
 	int throwDie();
 	std::pair<std::string, int> play(Player& p);
 	std::map<int, int> snakeMap; // key: snake tail, value: snake head
 	std::map<int, int> ladderMap; // key: ladder base, value: ladder top
-	std::map<int, Player*> playerMap;
+	std::vector<Player> playerVector;
 	unsigned int boardSize;
 	unsigned int numOfSnakes;
 	unsigned int numOfLadders;
